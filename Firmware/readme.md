@@ -3,13 +3,20 @@ The ressources of the chosen microcontroller RP2350 are limited. On the firmware
 
 ## Resource consideration
 ### RAM
+Avaliable RAM: 520KB
+
 
 | What | Data| KB |
 |-|-|-|
-|Captured data of PDM microphones | 24x20msx3.077Mbit/s | 184|
-|pcm data 16 bit| 24x20ms*48000S/sx2B/S|46|
-|FFT data normalized 8 bit| 24x20ms*48000S/sx1B/S|23|
-|GCC PHAT|276*||
+|Captured data of PDM microphones | 24 x 20msx3.077Mbit/s | 184|
+|pcm data 16 bit| 24x20ms x 48000S/s x 2B/S|46|
+|FFT data normalized 8 bit| 24 x 20ms x 48000S/s x 1B/S|23|
+|GCC PHAT|2 x 20ms x 4800S/s x 1B/S + 24 x 23 x 0.5 x  4 x 0.5ms x 48000S/s x 1 B/S x 2|14|
+|Image|2x84x84x1Byte|14|
+|**Total**||**281**|
+
+
+
 
 
 ### Processing power
