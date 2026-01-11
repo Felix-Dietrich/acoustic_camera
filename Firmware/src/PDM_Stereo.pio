@@ -1,21 +1,21 @@
 .program pdm_stereo
 .side_set 1
 
-    wait 1 irq 7        side 0      ; Globaler Start-Sync
+    wait 1 irq 7        side 0 [3]  ; Globaler Start-Sync
 
 .wrap_target
     set x, 30           side 0      ; Bereite Zähler für 31 Wiederholungen vor
 
     ; --- bits 0-30 ---
 bitloop:                            ; loop
-    ; -- Clock HIGH (6 Cycles) --
-    in pins, 1          side 1 [1]  ; Sample L
+    ; -- Clock HIGH (5 Cycles) --
+    in pins, 1          side 1      ; Sample L
     mov Y, ISR          side 1      ; Swap isr <-> osr 1
     mov ISR, OSR        side 1      ; Swap isr <-> osr 2
-    mov OSR, Y          side 1 [1]  ; Swap isr <-> osr 3, 2 delay
+    mov OSR, Y          side 1 [1]  ; Swap isr <-> osr 3, 1 delay
 
-    ; -- Clock LOW (6 Cycles) --
-    in pins, 1          side 0 [1]  ; Sample R
+    ; -- Clock LOW (5 Cycles) --
+    in pins, 1          side 0      ; Sample R
     mov Y, ISR          side 0      ; Swap isr <-> osr 1
     mov ISR, OSR        side 0      ; Swap isr <-> osr 2
     mov OSR, Y          side 0      ; Swap isr <-> osr 3
@@ -23,17 +23,14 @@ bitloop:                            ; loop
     
 
     ; --- Bit 31 + PUSH ---
-    ; -- Clock HIGH (6 Cycles) --
+    ; -- Clock HIGH (5 Cycles) --
     in pins, 1          side 1      ; Last sample L
     push noblock        side 1      ; Push channel L to FIFO 
-    mov Y, ISR          side 1      ; Swap isr <-> osr 1
-    mov ISR, OSR        side 1      ; Swap isr <-> osr 2
-    mov OSR, Y          side 1 [1]  ; Swap isr <-> osr 3, 1 delay
+    mov Y, NULL         side 1      ; Y = 0
+    mov ISR, OSR        side 1      ; isr = osr
+    mov OSR, NULL       side 1      ; osr = 0
 
-    ; -- Clock LOW (6 Cycles) --
+    ; -- Clock LOW (5 Cycles) --
     in pins, 1          side 0      ; Last sample R
-    push noblock        side 0      ; Push channel R to FIFO 
-    mov Y, ISR          side 0      ; Swap 1
-    mov ISR, OSR        side 0      ; Swap 2
-    mov OSR, Y          side 0      ; Swap 3
+    push noblock        side 0 [2]  ; Push channel R to FIFO 
 .wrap
